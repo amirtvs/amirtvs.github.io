@@ -9,3 +9,32 @@ body{
   background: #f3f3f3;
   font-family: 'Roboto', sans-serif;
 }
+nav{
+  width: calc(100% - 20px);
+  margin: 10px auto;
+  background: #fff;
+  border-radius: 5px;
+}
+nav ul{
+  width: 50%;
+  display: flex;
+}
+nav ul li a{
+  display: block;
+  padding: 15px;
+  color: #444;
+  transition: all .3s;
+}
+nav ul li a:hover{
+  color: #df2029;
+}
+nav ul.social{
+  justify-content: flex-end;
+}
+.container{
+  width: 70%;
+  margin: 0 auto;
+}
+.nav-container{
+  display: flex;
+}
