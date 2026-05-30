@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shift Calendar</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <h1>Calendar</h1>
+      <p id="monthLabel"></p>
+    </header>
+
+    <div id="calendar" class="calendar"></div>
+
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="selectedDate"></h3>
+
+        <div class="options">
+          <button onclick="setShift('off')">💤</button>
+          <button onclick="setShift('morning')">☀️</button>
+          <button onclick="setShift('evening')">🌜</button>
+        </div>
+
+        <button class="close" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
