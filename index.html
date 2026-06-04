@@ -1,38 +1,100 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shift Calendar</title>
-
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>مینی اپ تست PDF</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+    body {
+        font-family: 'Vazir', sans-serif;
+        direction: rtl;
+        background: #f2f2f2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: center;
+    }
+    th {
+        background: #4CAF50;
+        color: white;
+    }
+    button {
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #45a049;
+    }
+</style>
 </head>
-
 <body>
-  <div class="app">
-    <header>
-      <h1>Calendar</h1>
-      <p id="monthLabel"></p>
-    </header>
 
-    <div id="calendar" class="calendar"></div>
+<h2>تست ساخت PDF</h2>
 
-    <div id="modal" class="modal hidden">
-      <div class="modal-content">
-        <h3 id="selectedDate"></h3>
+<table id="myTable">
+    <tr>
+        <th>نام</th>
+        <th>سن</th>
+        <th>شهر</th>
+    </tr>
+    <tr>
+        <td>امیر</td>
+        <td>30</td>
+        <td>تهران</td>
+    </tr>
+    <tr>
+        <td>مریم</td>
+        <td>28</td>
+        <td>اصفهان</td>
+    </tr>
+</table>
 
-        <div class="options">
-          <button onclick="setShift('off')">💤</button>
-          <button onclick="setShift('morning')">☀️</button>
-          <button onclick="setShift('evening')">🌜</button>
-        </div>
+<button onclick="generatePDF()">ساخت PDF و ارسال</button>
 
-        <button class="close" onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  </div>
+<script>
+async function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-  <script src="app.js"></script>
+    const table = document.getElementById("myTable");
+    let y = 10;
+
+    for (let i = 0; i < table.rows.length; i++) {
+        let row = table.rows[i];
+        let x = 10;
+        for (let j = 0; j < row.cells.length; j++) {
+            doc.text(row.cells[j].innerText, x, y);
+            x += 60; // فاصله بین ستون‌ها
+        }
+        y += 10; // فاصله بین ردیف‌ها
+    }
+
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    // تو تلگرام WebApp میشه با لینک یا sendData فایل رو فرستاد
+    const a = document.createElement('a');
+    a.href = pdfUrl;
+    a.download = 'table.pdf';
+    a.click();
+}
+</script>
+
 </body>
 </html>
