@@ -5,15 +5,19 @@
 <title>مینی اپ تست PDF</title>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
     body {
         font-family: 'Vazir', sans-serif;
         direction: rtl;
-        background: #f2f2f2;
+        background: #f0f0f0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 30px;
+    }
+    h2 {
+        margin-bottom: 20px;
     }
     table {
         border-collapse: collapse;
@@ -23,7 +27,7 @@
     }
     th, td {
         border: 1px solid #ccc;
-        padding: 8px 12px;
+        padding: 10px 15px;
         text-align: center;
     }
     th {
@@ -31,12 +35,13 @@
         color: white;
     }
     button {
-        padding: 10px 20px;
+        padding: 12px 25px;
         background: #4CAF50;
         color: white;
         border: none;
         border-radius: 6px;
         cursor: pointer;
+        font-size: 16px;
     }
     button:hover {
         background: #45a049;
@@ -65,34 +70,38 @@
     </tr>
 </table>
 
-<button onclick="generatePDF()">ساخت PDF و ارسال</button>
+<button onclick="generatePDF()">ساخت PDF و دانلود</button>
 
 <script>
 async function generatePDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF({orientation: "portrait", unit: "pt", format: "a4"});
 
+    // فونت وزیر رو اضافه میکنیم
+    const fontUrl = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf";
+    const fontName = "Vazir";
+
+    // Fetch فونت و اضافه کردن به jsPDF
+    const fontBuffer = await fetch(fontUrl).then(r => r.arrayBuffer());
+    doc.addFileToVFS("Vazir-Regular.ttf", fontBuffer);
+    doc.addFont("Vazir-Regular.ttf", fontName, "normal");
+    doc.setFont(fontName);
+
+    let startY = 50;
     const table = document.getElementById("myTable");
-    let y = 10;
 
     for (let i = 0; i < table.rows.length; i++) {
         let row = table.rows[i];
-        let x = 10;
-        for (let j = 0; j < row.cells.length; j++) {
-            doc.text(row.cells[j].innerText, x, y);
-            x += 60; // فاصله بین ستون‌ها
+        let x = 50;
+        for (let j = row.cells.length - 1; j >= 0; j--) { // RTL
+            let cellText = row.cells[j].innerText;
+            doc.text(cellText, x, startY);
+            x += 150;
         }
-        y += 10; // فاصله بین ردیف‌ها
+        startY += 30;
     }
 
-    const pdfBlob = doc.output('blob');
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    // تو تلگرام WebApp میشه با لینک یا sendData فایل رو فرستاد
-    const a = document.createElement('a');
-    a.href = pdfUrl;
-    a.download = 'table.pdf';
-    a.click();
+    doc.save("table.pdf");
 }
 </script>
 
