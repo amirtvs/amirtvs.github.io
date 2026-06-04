@@ -1,108 +1,229 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>مینی اپ تست PDF</title>
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تست PDF</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <style>
-    body {
-        font-family: 'Vazir', sans-serif;
-        direction: rtl;
-        background: #f0f0f0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px;
-    }
-    h2 {
-        margin-bottom: 20px;
-    }
-    table {
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        background: #fff;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    th, td {
-        border: 1px solid #ccc;
-        padding: 10px 15px;
-        text-align: center;
-    }
-    th {
-        background: #4CAF50;
-        color: white;
-    }
-    button {
-        padding: 12px 25px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    button:hover {
-        background: #45a049;
-    }
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Vazirmatn',sans-serif;
+    background:#f3f5f7;
+    padding:30px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.header{
+    padding:24px;
+    background:#2563eb;
+    color:white;
+}
+
+.header h1{
+    font-size:24px;
+}
+
+.header p{
+    opacity:.8;
+    margin-top:8px;
+}
+
+.table-wrapper{
+    padding:24px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f8fafc;
+    padding:14px;
+    border:1px solid #e5e7eb;
+}
+
+td{
+    padding:14px;
+    border:1px solid #e5e7eb;
+    text-align:center;
+}
+
+.actions{
+    text-align:center;
+    margin-top:20px;
+}
+
+button{
+    border:none;
+    background:#16a34a;
+    color:white;
+    padding:14px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:15px;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+.status{
+    margin-top:15px;
+    text-align:center;
+    color:#555;
+}
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 <body>
 
-<h2>تست ساخت PDF</h2>
+<div class="container">
 
-<table id="myTable">
-    <tr>
-        <th>نام</th>
-        <th>سن</th>
-        <th>شهر</th>
-    </tr>
-    <tr>
-        <td>امیر</td>
-        <td>30</td>
-        <td>تهران</td>
-    </tr>
-    <tr>
-        <td>مریم</td>
-        <td>28</td>
-        <td>اصفهان</td>
-    </tr>
-</table>
+    <div id="pdf-content" class="card">
 
-<button onclick="generatePDF()">ساخت PDF و دانلود</button>
+        <div class="header">
+            <h1>فاکتور آزمایشی</h1>
+            <p>تست ساخت PDF داخل مینی اپ تلگرام</p>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>سن</th>
+                        <th>شهر</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>امیر</td>
+                        <td>30</td>
+                        <td>تهران</td>
+                    </tr>
+
+                    <tr>
+                        <td>مریم</td>
+                        <td>28</td>
+                        <td>اصفهان</td>
+                    </tr>
+
+                    <tr>
+                        <td>علی</td>
+                        <td>35</td>
+                        <td>شیراز</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="actions">
+        <button onclick="generatePDF()">
+            ساخت PDF
+        </button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+</div>
 
 <script>
-async function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({orientation: "portrait", unit: "pt", format: "a4"});
 
-    // فونت وزیر رو اضافه میکنیم
-    const fontUrl = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf";
-    const fontName = "Vazir";
+async function generatePDF(){
 
-    // Fetch فونت و اضافه کردن به jsPDF
-    const fontBuffer = await fetch(fontUrl).then(r => r.arrayBuffer());
-    doc.addFileToVFS("Vazir-Regular.ttf", fontBuffer);
-    doc.addFont("Vazir-Regular.ttf", fontName, "normal");
-    doc.setFont(fontName);
+    try{
 
-    let startY = 50;
-    const table = document.getElementById("myTable");
+        document.getElementById('status').innerText =
+        'در حال ساخت PDF...';
 
-    for (let i = 0; i < table.rows.length; i++) {
-        let row = table.rows[i];
-        let x = 50;
-        for (let j = row.cells.length - 1; j >= 0; j--) { // RTL
-            let cellText = row.cells[j].innerText;
-            doc.text(cellText, x, startY);
-            x += 150;
-        }
-        startY += 30;
+        const element =
+        document.getElementById('pdf-content');
+
+        const canvas =
+        await html2canvas(element,{
+            scale:3,
+            useCORS:true,
+            backgroundColor:'#ffffff'
+        });
+
+        const imgData =
+        canvas.toDataURL('image/png');
+
+        const { jsPDF } =
+        window.jspdf;
+
+        const pdf =
+        new jsPDF('p','mm','a4');
+
+        const pdfWidth =
+        pdf.internal.pageSize.getWidth();
+
+        const imgWidth =
+        pdfWidth;
+
+        const imgHeight =
+        (canvas.height * imgWidth) /
+        canvas.width;
+
+        pdf.addImage(
+            imgData,
+            'PNG',
+            0,
+            0,
+            imgWidth,
+            imgHeight
+        );
+
+        pdf.save('table.pdf');
+
+        document.getElementById('status').innerText =
+        'PDF با موفقیت ساخته شد';
+
+    }catch(err){
+
+        console.error(err);
+
+        document.getElementById('status').innerText =
+        'خطا در ساخت PDF';
+
     }
 
-    doc.save("table.pdf");
 }
+
 </script>
 
 </body>
